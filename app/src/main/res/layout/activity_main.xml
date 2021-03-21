@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.main.MainActivity">
+    <data class="MainActivityBinding">
+
+        <import type="com.gondev.imagelist.util.NetworkState" />
+
+        <import type="java.util.List" />
+        <variable
+            name="vm"
+            type="com.gondev.imagelist.ui.main.MainViewModel" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingTop="68dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        app:items="@{vm.imageList.data}"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:spanCount="2"
+        app:hasFixedSize="@{true}"
+        tools:listitem="@layout/item_image" />
+
+    <include
+        layout="@layout/include_network_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:result="@{vm.imageList}" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
