@@ -1,6 +1,6 @@
-package com.gondev.imagelist.domain.network
+package com.gondev.imagelist.domain.model.network
 
-import com.gondev.imagelist.domain.network.response.ImageData
+import com.gondev.imagelist.domain.model.network.response.ImageData
 import retrofit2.http.GET
 
 interface ImageAPI {

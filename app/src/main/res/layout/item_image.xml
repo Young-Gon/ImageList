@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/activity_main">
+
+    <data class="ImageItemBinding">
+        <import type="com.gondev.imagelist.domain.model.network.response.ImageData" />
+
+        <variable
+            name="item"
+            type="ImageData" />
+
+        <variable
+            name="vm"
+            type="com.gondev.imagelist.ui.main.MainViewModel" />
+
+        <variable
+            name="itemClickListener"
+            type="com.gondev.imagelist.util.ItemClickListener&lt;ImageData>" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:elevation="4dp"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        android:onClick="@{(v)->itemClickListener.onItemClicked(v, item)}"
+        app:cardCornerRadius="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:transitionName="@{item.id+``}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:imgUrl="@{item.download_url}"
+                app:layout_constraintDimensionRatio="1:1"
+                tools:src="@tools:sample/avatars" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

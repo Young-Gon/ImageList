@@ -1,13 +1,14 @@
-package com.gondev.movie.di
+package com.gondev.imagelist.di
 
 import android.app.Application
 import com.gondev.imagelist.BuildConfig
-import com.gondev.imagelist.domain.network.ImageAPI
+import com.gondev.imagelist.domain.model.network.ImageAPI
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.MediaType.Companion.toMediaType
@@ -30,6 +31,7 @@ object NetworkModule {
 
 	@Singleton
 	@Provides
+	@ExperimentalSerializationApi
 	fun provideImageAPIService(application: Application) =
 		Retrofit.Builder()
 			.baseUrl(BuildConfig.base_url)

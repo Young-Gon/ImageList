@@ -5,6 +5,7 @@
     <data>
         <import type="com.gondev.imagelist.util.NetworkState" />
         <import type="com.gondev.imagelist.BuildConfig" />
+        <import type="java.util.List"/>
 
         <variable
             name="result"
@@ -26,7 +27,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:visibleGone="@{result.data == null || ( result.data instanceof java.util.List &amp;&amp; ((java.util.List)result.data).size()==0 )}">
+        app:visibleGone="@{result.data == null || ( result.data instanceof List &amp;&amp; ((List)result.data).size()==0 )}">
         <!--loading-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

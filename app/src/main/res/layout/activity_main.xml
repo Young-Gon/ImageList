@@ -22,7 +22,8 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingTop="68dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:paddingStart="4dp"
         android:paddingEnd="4dp"
         app:items="@{vm.imageList.data}"
@@ -36,7 +37,7 @@
         layout="@layout/include_network_state"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:result="@{vm.imageList}" />
+        app:result="@{(NetworkState)vm.imageList}" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
