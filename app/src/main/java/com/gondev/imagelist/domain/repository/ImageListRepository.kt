@@ -1,24 +1,24 @@
 package com.gondev.imagelist.domain.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveDataScope
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.gondev.imagelist.domain.model.database.dao.ImageDataDao
 import com.gondev.imagelist.domain.model.network.ImageAPI
 import com.gondev.imagelist.domain.model.network.response.ImageData
 import com.gondev.imagelist.util.NetworkState
-import java.lang.Exception
 import javax.inject.Inject
 
 interface ImageListRepository {
-    suspend fun loadImageList(liveDataScope: LiveDataScope<NetworkState<List<ImageData>>>): LiveDataScope<NetworkState<List<ImageData>>>
+    fun loadImageList(): LiveData<NetworkState<List<ImageData>>>
 }
 
 class ImageListRepositoryImpl @Inject constructor(
     private val dao: ImageDataDao,
     private val api: ImageAPI,
 ): ImageListRepository {
-    override suspend fun loadImageList(liveDataScope: LiveDataScope<NetworkState<List<ImageData>>>) = liveDataScope.apply {
+    override fun loadImageList() = liveData {
         val disposable= emitSource(dao.findAll().map{
             NetworkState.loading(it)
         })

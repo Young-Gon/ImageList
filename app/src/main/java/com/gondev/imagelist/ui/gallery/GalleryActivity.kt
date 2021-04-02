@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.DiffUtil
 import com.gondev.imagelist.BR
 import com.gondev.imagelist.R
 import com.gondev.imagelist.databinding.GalleryActivityBinding
+import com.gondev.imagelist.databinding.ViewpagerImageItemBinding
 import com.gondev.imagelist.domain.model.network.response.ImageData
 import com.gondev.imagelist.domain.repository.ITEM_ID
-import com.gondev.imagelist.util.DataBindingListAdapter
 import com.gondev.imagelist.util.DataBindingPagedListAdapter
 import com.gondev.imagelist.util.dataBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,17 +66,14 @@ class GalleryActivity : AppCompatActivity() {
         (binding.frameLayout2.layoutParams as ConstraintLayout.LayoutParams).bottomMargin =
             getNavigationbarHeight()
 
-        binding.viewPager.adapter = DataBindingPagedListAdapter(
+        binding.viewPager.adapter = DataBindingPagedListAdapter<ImageData, ViewpagerImageItemBinding>(
             layoutResId = R.layout.item_viewpager_image,
             bindingVariableId = BR.item,
             diffCallback = object : DiffUtil.ItemCallback<ImageData>() {
                 override fun areItemsTheSame(oldItem: ImageData, newItem: ImageData) =
                     oldItem.id == newItem.id
 
-                override fun areContentsTheSame(
-                    oldItem: ImageData,
-                    newItem: ImageData
-                ) =
+                override fun areContentsTheSame(oldItem: ImageData, newItem: ImageData) =
                     oldItem == newItem
             },
             lifecycleOwner = this

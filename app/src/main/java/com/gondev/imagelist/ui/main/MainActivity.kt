@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import com.gondev.imagelist.BR
 import com.gondev.imagelist.R
+import com.gondev.imagelist.databinding.ImageItemBinding
 import com.gondev.imagelist.databinding.MainActivityBinding
 import com.gondev.imagelist.domain.model.network.response.ImageData
 import com.gondev.imagelist.ui.gallery.startGalleryActivity
@@ -35,10 +36,11 @@ class MainActivity : AppCompatActivity() {
                     oldItem == newItem
             },
             lifecycleOwner = this,
-            BR.vm to viewModel,
-            BR.itemClickListener to ItemClickListener<ImageData> { view, item ->
+        ) { binding: ImageItemBinding ->
+            binding.vm = viewModel
+            binding.itemClickListener = ItemClickListener<ImageData> { view, item ->
                 startGalleryActivity(item.id, view.findViewById(R.id.imageView))
             }
-        )
+        }
     }
 }

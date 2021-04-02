@@ -71,61 +71,61 @@ import androidx.recyclerview.widget.RecyclerView
  * @see RecyclerViewHolder
  * @see MultiRecyclerViewListAdapter
  */
-class DataBindingListAdapter<T>(
+class DataBindingListAdapter<T, V: ViewDataBinding>(
 	@LayoutRes private val layoutResId: Int,
 	private val bindingVariableId: Int? = null,
 	diffCallback: DiffUtil.ItemCallback<T>,
 	private val lifecycleOwner: LifecycleOwner? = null,
-	private vararg val param: Pair<Int, Any>
+	private val init: ((V) -> Unit)? = null
 ) : ListAdapter<T, RecyclerViewHolder<T>>(diffCallback) {
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = createRecyclerViewHolder<T>(
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = createRecyclerViewHolder<T, V>(
 		layoutResId = layoutResId,
 		bindingVariableId = bindingVariableId,
 		lifecycleOwner = lifecycleOwner,
 		parent = parent,
-		param = *param
+		init = init
 	)
 
 	override fun onBindViewHolder(holder: RecyclerViewHolder<T>, position: Int) =
 		holder.onBindViewHolder(getItem(position))
 }
 
-class DataBindingPagedListAdapter<T>(
+class DataBindingPagedListAdapter<T, V: ViewDataBinding>(
 	@LayoutRes private val layoutResId: Int,
 	private val bindingVariableId: Int? = null,
 	diffCallback: DiffUtil.ItemCallback<T>,
 	private val lifecycleOwner: LifecycleOwner? = null,
-	private vararg val param: Pair<Int, Any>
+	private val init: ((V) -> Unit)? = null
 ) : PagedListAdapter<T, RecyclerViewHolder<T>>(diffCallback) {
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = createRecyclerViewHolder<T>(
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = createRecyclerViewHolder<T, V>(
 		layoutResId = layoutResId,
 		bindingVariableId = bindingVariableId,
 		lifecycleOwner = lifecycleOwner,
 		parent = parent,
-		param = *param
+		init = init
 	)
 
 	override fun onBindViewHolder(holder: RecyclerViewHolder<T>, position: Int) =
 		holder.onBindViewHolder(getItem(position))
 }
 
-fun <T> createRecyclerViewHolder(
+fun <T, V: ViewDataBinding> createRecyclerViewHolder(
 	@LayoutRes layoutResId: Int,
 	bindingVariableId: Int? = null,
 	lifecycleOwner: LifecycleOwner?=null,
 	parent: ViewGroup,
-	vararg param: Pair<Int, Any>) = RecyclerViewHolder<T>(
+	init: ((V) -> Unit)?
+) = RecyclerViewHolder<T>(
 	(DataBindingUtil.inflate(
 		LayoutInflater.from(parent.context),
 		layoutResId,
 		parent,
 		false
-	) as ViewDataBinding).apply {
-		param.forEach {
-			setVariable(it.first, it.second)
-		}
-		lifecycleOwner?.let { owner->
-			this.lifecycleOwner = owner
+	) as V).also { binding ->
+		init?.invoke(binding)
+
+		lifecycleOwner?.let { lifecycleOwner->
+			binding.lifecycleOwner = lifecycleOwner
 		}
 	}, bindingVariableId
 )
