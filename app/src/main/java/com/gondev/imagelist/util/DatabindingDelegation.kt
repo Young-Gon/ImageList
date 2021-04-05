@@ -7,7 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import kotlin.properties.ReadOnlyProperty
 
 /**
  * Use setContentView before using the binding variable.
@@ -36,11 +35,23 @@ import kotlin.properties.ReadOnlyProperty
  * }
  * ```
  */
-fun <V : ViewDataBinding> FragmentActivity.dataBinding() = ReadOnlyProperty<FragmentActivity, V>{ thisRef, property ->
-    bind<V>(checkNotNull(thisRef.findViewById<ViewGroup>(android.R.id.content).getChildAt(0)) {
-        "Call setContentView or Use Activity's secondary constructor passing layout res id."
-    }).also {
-        it.lifecycleOwner = thisRef
+fun <T : ViewDataBinding> FragmentActivity.dataBinding() = DataBindingLazy<T>(this)
+
+class DataBindingLazy<T : ViewDataBinding>(
+    private val activity: FragmentActivity
+): Lazy<T> {
+    private var binding: T? = null
+    override fun isInitialized(): Boolean = binding != null
+    override val value: T
+        get() = binding ?: bind<T>(activity.getContentView()).also {
+            it.lifecycleOwner = activity
+            binding = it
+        }
+
+    private fun FragmentActivity.getContentView(): View {
+        return checkNotNull(findViewById<ViewGroup>(android.R.id.content).getChildAt(0)) {
+            "Call setContentView or Use Activity's secondary constructor passing layout res id."
+        }
     }
 }
 
@@ -77,10 +88,17 @@ fun <V : ViewDataBinding> FragmentActivity.dataBinding() = ReadOnlyProperty<Frag
  * }
  * ```
  */
-fun <T : ViewDataBinding> Fragment.dataBinding() = ReadOnlyProperty<Fragment, T>{ thisRef, property ->
-    bind<T>(requireView()).also {
-        it.lifecycleOwner = thisRef.viewLifecycleOwner
-    }
+fun <T : ViewDataBinding> Fragment.dataBinding() = FragmentDataBindingLazy<T>(this)
+
+class FragmentDataBindingLazy<T : ViewDataBinding>(
+    private val fragment: Fragment
+): Lazy<T> {
+    private var binding: T? = null
+    override fun isInitialized(): Boolean = binding != null
+    override val value: T
+        get() = binding ?:  bind<T>(fragment.requireView()).also {
+            it.lifecycleOwner = fragment.viewLifecycleOwner
+        }
 }
 
 private fun <T : ViewDataBinding> bind(view: View): T = DataBindingUtil.bind(view)!!

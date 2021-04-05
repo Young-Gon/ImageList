@@ -27,8 +27,6 @@ import androidx.recyclerview.widget.RecyclerView
  * DataBinding을 사용하고, [ViewModel][androidx.lifecycle.ViewModel]을 사용할 경우, 다음과 같이 사용한다
  *
  * ```
- * binding.vm = getViewModel() // binding 객체에 VM 전달
- * binding.lifecycleOwner = this  // 데이터 변화를 관찰 하기 위해 binding 객체에 lifecycleOwner 등록
  * binding.Recyclerview.adapter =
  *     RecyclerViewListAdapter<Item, ItemBinding>(
  *         R.layout.item,
@@ -42,8 +40,9 @@ import androidx.recyclerview.widget.RecyclerView
  *
  *             },
  *             this, // lifecycleOwner 를 전달하여 View 내부의 데이터 변화 관찰
- *             BR.vm to binding.vm!! // 추가적인 파리미터 전달
- *         )
+ *         ){ itemBinding: ItemBinding ->  // 아이템 바인딩을 제외한 바인딩 초기화 진행
+ *             itemBinding.vm = viewModel
+ *         }
  * ```
  * R.layout.item은 다음과 같이 되어 있다
  * ```
@@ -67,9 +66,8 @@ import androidx.recyclerview.widget.RecyclerView
  * @param layoutResId 아이템 레이아웃(View)의 리소스 ID
  * @param bindingVariableId 레이아웃의 data 영역에서 바인딩될 아이템(Model)의 변수(variable)의 ID
  * @param diffCallback 아이템의 변경 사항을 구분하기 위해 변경여부를 알려주기 위한 콜백 클래스
- * @param param OPTIONAL (가변 인자) 레이아웃의 data 영역에 추가로 바인딩 될 변수의 ID와 Value 쌍
+ * @param init OPTIONAL 레이아웃의 data 영역에 추가로 바인딩 될 변수의 초기화 진행
  * @see RecyclerViewHolder
- * @see MultiRecyclerViewListAdapter
  */
 class DataBindingListAdapter<T, V: ViewDataBinding>(
 	@LayoutRes private val layoutResId: Int,
